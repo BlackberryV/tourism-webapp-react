@@ -1,19 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import {NavLink} from "react-router-dom";
 import Map from "../../components/Map";
 import CommentForm from "../../components/CommentForm";
-import { useParams } from "react-router-dom";
-import { getPostById } from "../../firebase/firebase";
-import { ILocation } from "../../types";
+import {useParams} from "react-router-dom";
+import {getPostById} from "../../firebase/firebase";
+import {ILocation} from "../../types";
+import Slider from "../../components/Slider";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+
 const PostDetailPage: React.FC = () => {
     const {id} = useParams()
     const [post, setPost] = useState<ILocation>()
-    
+
     useEffect(() => {
         if (!id) {
             return
         }
-        
+
         const getPost = async (id: string) => {
             const doc = await getPostById(id)
             if (!doc.exists()) {
@@ -63,13 +66,17 @@ const PostDetailPage: React.FC = () => {
                             </div>
                         </div>
                     </div>
+                    {post.images.length > 1 ?
+                        <div className="white-container slider-container"><Slider images={post.images}/></div> :
+                        <></>
+                    }
                     <div className="white-container add">
                         <div className="add-text">Add this place to favourites</div>
                         <button className="add-button">+</button>
                     </div>
                     <div className="white-container map-container">
                         <Map position={{
-                            lat:    post.coordinates.lat,
+                            lat: post.coordinates.lat,
                             lng: post.coordinates.lng
                         }}/>
                     </div>

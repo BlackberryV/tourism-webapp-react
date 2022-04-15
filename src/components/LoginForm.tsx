@@ -1,25 +1,59 @@
-import React, {useState} from 'react';
-import {loginAccountWithGoogle, loginWithEmailAndPassword} from "../firebase/firebase";
+import React from 'react';
+import {
+    loginAccountWithGoogle,
+    loginWithEmailAndPassword
+} from "../firebase/firebase";
+import {FormikProps, useFormik} from "formik";
+import * as Yup from "yup";
+
+interface LoginFormValues {
+    email: string,
+    password: string
+}
 
 export const LoginForm: React.FC = () => {
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        loginWithEmailAndPassword(email, password).then();
-    }
+
+    const formik: FormikProps<LoginFormValues> = useFormik<LoginFormValues>({
+            initialValues: {
+                email: '',
+                password: '',
+            },
+            validationSchema: Yup.object({
+                email: Yup.string().email("Invalid email").required("Required"),
+                password: Yup.string().min(6, "Must be 6 characters or more").required("Required"),
+            }),
+            onSubmit: (values) => {
+                loginWithEmailAndPassword(values.email, values.password).then()
+            }
+        }
+    );
+
     return (
         <div>
             <div className="auth-container">
-                <form className='login' onSubmit={handleSubmit}>
+                <form className='login' onSubmit={formik.handleSubmit}>
                     <div className="form-title">Log in</div>
-                    <label className="form-label">Email<input type='text' value={email} onChange={(e) => {
-                        setEmail(e.target.value)
-                    }} className='form-input'/></label>
-                    <label className="form-label">Pasword<input type='text' value={password} onChange={(e) => {
-                        setPassword(e.target.value)
-                    }} className='form-input'/></label>
-                    <button onClick={() => handleSubmit} type='submit' className='submit'>Login</button>
+                    <label className="form-label">Email
+                        <input
+                            value={formik.values.email}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            id="email"
+                            name="email"
+                            type='text' className='form-input'/>
+                    </label>
+                    {formik.touched.email && formik.errors.email ? <div className={"error-message"}>{formik.errors.email}</div> : null}
+                    <label className="form-label">Password
+                        <input
+                            value={formik.values.password}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            id="password"
+                            name="password"
+                            type='password' className='form-input password-input'/>
+                    </label>
+                    {formik.touched.password && formik.errors.password ? <div className={"error-message"}>{formik.errors.password}</div> : null}
+                    <button type='submit' className='submit'>Login</button>
                 </form>
                 <button onClick={() => loginAccountWithGoogle()} className="google-button">Log in with
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="30px" height="30px">
