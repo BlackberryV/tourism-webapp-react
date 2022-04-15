@@ -9,20 +9,27 @@ import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import RequestFormPage from "./pages/RequestFormPage/RequestFormPage";
 import Layout from "./components/Layout";
+import AdminCreatePostPage from "./pages/AdminCreatePostPage/AdminCreatePostPage";
 
 function App() {
     return (
         <Routes>
             <Route path={'/'} element={<Layout/>}>
-                <Route path="/" element={<Navigate to={"/posts"}/>}/>
-                <Route path="/posts" element={<PostsPage/>}/>
-                <Route path="/posts/:postId" element={<PostDetailPage/>}/>
-                <Route path="/profile" element={<ProfilePage/>}/>
-                <Route path="/profile/:profileId" element={<ProfilePage/>}/>
-                <Route path="/requests" element={<AdminRequestsPage/>}/>
-                <Route path="/requestPost" element={<RequestFormPage/>}/>
+                //Not logged in users
                 <Route path="/login" element={<AuthMiddleware><LoginPage/></AuthMiddleware>}/>
                 <Route path="/signup" element={<AuthMiddleware><RegisterPage/></AuthMiddleware>}/>
+
+                //Everybody
+                <Route path="/" element={<Navigate to={"/posts"}/>}/>
+                <Route path="/posts" element={<PostsPage/>}/>
+                <Route path="/posts/:id" element={<PostDetailPage/>}/>
+                <Route path="/profile" element={<ProfilePage/>}/>
+                <Route path="/profile/:profileId" element={<ProfilePage/>}/>
+                <Route path="/requestPost" element={<RequestFormPage/>}/>
+
+                //Admin routes
+                <Route path="/requests" element={<AdminRequestsPage/>}/>
+                <Route path="/createPost" element={<AdminCreatePostPage/>}/>
             </Route>
         </Routes>
     );

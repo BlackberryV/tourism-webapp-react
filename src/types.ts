@@ -10,26 +10,35 @@ export interface IUser {
 }
 
 export interface ILocation {
-    id: string,
-    title: string,
-    coordinates: string,
+    id?: string,
+    name: string,
+    coordinates: ICoordinates,
     images: string[],
     description: string,
     date: FieldValue,
-    rate: number,
+    comments: IComment[]
+    rating: IRating[],
+    cachedRating: number
 }
 
 export interface IComment {
-    id: string,
-    location: ILocation,
     author: IUser,
     text: string,
     date: Date,
 }
 
-export interface Suggestion {
-    id: string,
+export interface ISuggestion {
     author: IUser,
     image: File,
     location: ILocation,
+}
+
+export interface ICoordinates {
+    lat: number,
+    lng: number
+}
+
+export interface IRating {
+    userId: string,
+    value: number
 }
