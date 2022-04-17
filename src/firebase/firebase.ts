@@ -15,10 +15,12 @@ import {
     serverTimestamp,
     doc,
     updateDoc,
-    getDoc
+    getDoc,
+    arrayUnion
 } from "firebase/firestore"
 import {getStorage, ref, uploadBytesResumable, getDownloadURL} from "firebase/storage";
 import {ICoordinates, ILocation, IUser, IRating, IComment} from "../types";
+import {Timestamp} from "firebase/firestore"
 
 const firebaseConfig = {
     apiKey: "AIzaSyAkBRxravwg9cWcehtZd37Rs7K80kALxFA",
@@ -39,6 +41,16 @@ export const storage = getStorage(app);
 //DB functions
 const usersCollection = collection(db, 'users');
 const locationCollection = collection(db, 'locations');
+
+export const addComment = async (postId: string, authorId: string, commentContent: string) => {
+    const comment: IComment = {
+        authorId: authorId,
+        text: commentContent,
+        date: Timestamp.now(),
+    }
+    const docRef = doc(db, "locations", postId)
+    updateDoc(docRef, {comments: arrayUnion(comment)}).then(() => console.log("Add comment"))
+}
 
 export const uploadFile = async (file: File): Promise<string> => {
     const imageStorageRef = await ref(storage, `/images/${file.name}`)
@@ -180,8 +192,9 @@ export const changePostRating = async (post: ILocation, rating: IRating) => {
 
     let prevUserRating = post.rating.find(rate => rate.userId === rating.userId)?.value || 0
     let newRating = post.rating.filter(rate => rate.userId !== rating.userId).concat(rating)
-    let newCachedValue = (post.cachedRating - prevUserRating + rating.value) / post.rating.length
+    let newCachedValue = (post.cachedRating * post.rating.length - prevUserRating + rating.value) / post.rating.length
 
+    console.log(prevUserRating, newRating, newCachedValue)
     try {
         await updateDoc(postRef, {
             rating: newRating,

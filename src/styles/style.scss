@@ -555,7 +555,7 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  height: 120px;
+  min-height: 120px;
 }
 
 .last{
@@ -606,6 +606,16 @@ body {
   margin-bottom: 0;
 }
 
+
+.gray {
+  color: gray;
+}
+.yellow {
+  color: yellow;
+}
+.ri-star-fill {
+  font-size: 30px;
+}
 
 .admin-panel{
   border-bottom: 1px solid #23272F;
@@ -773,4 +783,50 @@ body {
 .slider-container{
   padding: 25px;
   box-sizing: border-box;
+}
+
+.comment-list{
+  display: flex;
+  flex-direction: column;
+  min-height: 120px;
+  padding: 0 50px;
+}
+
+.comment-item{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  padding: 30px 0;
+  min-height: 100px;
+}
+
+.comment-content{
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+  padding-left:30px;
+  height: 100%;
+}
+.comment-date{
+  width: 20%;
+  text-align: end;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.user-title{
+  font-size: 18px;
+  font-weight: 500;
+  padding-bottom: 10px;
+}
+
+.comment-text{
+  font-size: 16px;
+}
+
+.comment-error{
+  text-align: center;
+  margin: -30px 0 30px 0;
 }

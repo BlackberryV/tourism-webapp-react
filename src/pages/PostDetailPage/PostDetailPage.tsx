@@ -7,6 +7,7 @@ import {getPostById} from "../../firebase/firebase";
 import {ILocation} from "../../types";
 import Slider from "../../components/Slider";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import CommentsList from "../../components/CommentsList";
 
 const PostDetailPage: React.FC = () => {
     const {id} = useParams()
@@ -34,7 +35,6 @@ const PostDetailPage: React.FC = () => {
     if (!post) {
         return <></>
     }
-
     return (
         <div className='page-container'>
             <div className='back'>
@@ -85,7 +85,8 @@ const PostDetailPage: React.FC = () => {
                         <button className="add-button">+</button>
                     </div>
                     <div className="white-container comments">
-                        <CommentForm/>
+                        <CommentForm locationId={id}/>
+                        <CommentsList commentsArr={post.comments}/>
                     </div>
                 </div>
             </div>
