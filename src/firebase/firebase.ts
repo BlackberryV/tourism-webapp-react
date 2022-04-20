@@ -17,6 +17,8 @@ import {
     updateDoc,
     getDoc,
     arrayUnion,
+    deleteDoc
+
 } from "firebase/firestore"
 import {getStorage, ref, uploadBytesResumable, getDownloadURL} from "firebase/storage";
 import {ICoordinates, ILocation, IUser, IRating, IComment, IPropose} from "../types";
@@ -41,7 +43,23 @@ export const storage = getStorage(app);
 //DB functions
 const usersCollection = collection(db, 'users');
 const locationCollection = collection(db, 'locations');
-const proposesCollection = collection(db, 'proposes');
+export const proposesCollection = collection(db, 'proposes');
+
+export const getProposes = async () => {
+    return await getDocs(proposesCollection)
+}
+
+export const addImageToLocation = async (locationId: string, imageUrls: string[], proposeId: string) => {
+    const locationRef = doc(db, "locations", locationId)
+    await updateDoc(locationRef, {images: arrayUnion(...imageUrls)}).then(() => console.log("Add image to location"))
+    const proposeRef = doc(db, "proposes", proposeId)
+    await deleteDoc(proposeRef).then(() => console.log("Delete propose"))
+}
+
+export const deletePropose = async (proposeId: string) => {
+    const proposeRef = doc(db, "proposes", proposeId)
+    await deleteDoc(proposeRef).then(() => console.log("Decline propose"))
+}
 
 export const addComment = async (postId: string, authorId: string, commentContent: string) => {
     const comment: IComment = {
@@ -67,11 +85,11 @@ export const uploadFile = async (file: File): Promise<string> => {
     })
 }
 
-export const addPropose = async (userId: string, urls: string[], locationId: string) => {
+export const addPropose = async (user: IUser, urls: string[], location: ILocation) => {
     const newPropose: IPropose = {
-        authorId: userId,
+        author: user,
         images: urls,
-        locationId: locationId,
+        location: location,
         date: serverTimestamp(),
     }
     await addDoc(proposesCollection, newPropose);

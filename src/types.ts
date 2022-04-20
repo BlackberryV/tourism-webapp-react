@@ -29,9 +29,10 @@ export interface IComment {
 }
 
 export interface IPropose {
-    authorId: string,
+    id?: string,
+    author: IUser,
     images: string[],
-    locationId: string,
+    location: ILocation,
     date: FieldValue,
 }
 

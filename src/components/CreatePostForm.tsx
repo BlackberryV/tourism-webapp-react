@@ -31,7 +31,7 @@ const CreatePostForm: FC = () => {
             urls: Yup.array().required().min(1, "You need to add at least one image"),
         }),
         onSubmit: (values, {resetForm}) => {
-            addLocation(values.name, values.description, values.urls, values.coordinates).then(() => console.log("post added"))
+            addLocation(values.name, values.description, values.urls, coordinates).then(() => console.log("post added"))
             resetForm();
         }
     })
@@ -45,7 +45,6 @@ const CreatePostForm: FC = () => {
         await Promise.all(Array.from(filesRef.current?.files).map(uploadFile))
             .then(urls => formik.setFieldValue("urls", Array.from(urls)))
     }
-
     return (
         <div className='add-form-container'>
             <form className='add-form' onSubmit={formik.handleSubmit}>

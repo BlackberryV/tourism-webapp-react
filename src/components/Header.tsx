@@ -1,12 +1,13 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {AuthContext} from "../firebase/AuthContext";
-import {NavLink} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import {getUserById, logOut} from "../firebase/firebase";
 import {IUser} from "../types";
 
 const Header: React.FC = () => {
     const user = useContext(AuthContext);
     const [dbUser, setDbUser] = useState<IUser | undefined>(undefined)
+    const navigate = useNavigate();
     useEffect(() => {
         getUserById(user?.uid).then((user) => {
             setDbUser(user)
@@ -15,6 +16,9 @@ const Header: React.FC = () => {
     const openBurger = () => {
         const menu : null| HTMLElement = document.getElementById('menu');
         menu!.classList.toggle('active');
+    }
+    const handleProfileNavigate = () => {
+        navigate(`/profile/${dbUser?.uid}`)
     }
     return (
         <header className="header">
@@ -32,10 +36,10 @@ const Header: React.FC = () => {
                         <NavLink to='/posts'>Home</NavLink>
                     }
                     <NavLink to='/login' onClick={() => logOut()}>Log Out</NavLink>
-                    <NavLink className='profile' to='/profile'>
+                    <div className='profile' onClick={handleProfileNavigate}>
                         <div className="avatar">{dbUser?.name.substr(0, 1)}</div>
                         <div className="profile-link-text">Profile</div>
-                    </NavLink>
+                    </div>
                 </ul>
                 :
                 <ul  onClick={openBurger}  id='menu' className="menu">
