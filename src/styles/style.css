@@ -122,20 +122,15 @@ body {
   box-sizing: border-box;
 }
 
+.header .profile-link-text {
+  display: none;
+}
 .header .logo {
   height: 6.75vh;
   width: 6.75vh;
 }
 .header .logo-img {
   width: 100%;
-  height: 100%;
-}
-.header h2 {
-  vertical-align: center;
-  text-align: center;
-}
-.header html, .header body {
-  margin: 0;
   height: 100%;
 }
 .header .menu {
@@ -163,89 +158,9 @@ body {
 .header .menu > a:hover {
   color: #e0dfdf;
 }
-.header .menu-button-container {
+
+.header-burger {
   display: none;
-  height: 100%;
-  width: 30px;
-  cursor: pointer;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.header #menu-toggle {
-  display: none;
-}
-.header .menu-button,
-.header .menu-button::before,
-.header .menu-button::after {
-  display: block;
-  background-color: #fff;
-  position: absolute;
-  height: 4px;
-  width: 30px;
-  transition: transform 400ms cubic-bezier(0.23, 1, 0.32, 1);
-  border-radius: 2px;
-}
-.header .menu-button::before {
-  content: "";
-  margin-top: -8px;
-}
-.header .menu-button::after {
-  content: "";
-  margin-top: 8px;
-}
-.header #menu-toggle:checked + .menu-button-container .menu-button::before {
-  margin-top: 0;
-  transform: rotate(405deg);
-}
-.header #menu-toggle:checked + .menu-button-container .menu-button {
-  background: rgba(255, 255, 255, 0);
-}
-.header #menu-toggle:checked + .menu-button-container .menu-button::after {
-  margin-top: 0;
-  transform: rotate(-405deg);
-}
-@media (max-width: 700px) {
-  .header .menu-button-container {
-    display: flex;
-  }
-  .header .menu {
-    position: absolute;
-    top: 12vh;
-    left: 0;
-    flex-direction: column;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    height: auto;
-  }
-  .header #menu-toggle ~ .menu a {
-    display: none;
-    height: 0;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    transition: 0.2s linear;
-  }
-  .header #menu-toggle:checked ~ .menu a {
-    display: flex;
-    border: 1px solid #333;
-    height: 30px;
-    padding: 0.5em;
-    transition: height 400ms cubic-bezier(0.23, 1, 0.32, 1);
-  }
-  .header .menu > a {
-    display: flex;
-    justify-content: center;
-    margin: 0;
-    padding: 0.5em 0;
-    width: 100%;
-    color: white;
-    background-color: #222;
-  }
-  .header .menu > a:not(:last-child) {
-    border-bottom: 1px solid #444;
-  }
 }
 
 .profile {
@@ -258,7 +173,7 @@ body {
   height: 6.75vh;
   width: 6.75vh;
   border-radius: 50px;
-  background: #382b54;
+  background: #95c1da;
   color: #F8F2F4;
   font-weight: 700;
   text-decoration: none;
@@ -404,7 +319,7 @@ body {
   letter-spacing: 0.05em;
   color: #FFFFFF;
   cursor: pointer;
-  transition: 0.2s linear;
+  transition: 0.05s linear;
 }
 .add-button:hover {
   background: #295d3f;
@@ -759,6 +674,87 @@ body {
 .comment-error {
   text-align: center;
   margin: -30px 0 30px 0;
+}
+
+.delete-button {
+  background: #f73535;
+  transform: rotate(45deg);
+}
+.delete-button:hover {
+  background: #ab1818;
+.Modal {
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.5s;
+  text-decoration: none;
+  z-index: 1000;
+}
+.Modal .modal__content {
+  padding: 25px;
+  background-color: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.Modal.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+@media (max-width: 740px) {
+  .header-burger {
+    display: block;
+    width: 4.05vh;
+    height: 4.05vh;
+    color: #FFFFFF;
+    cursor: pointer;
+  }
+
+  .header .menu {
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    right: -100vh;
+    top: 9.5vh;
+    background: #ffffff;
+    height: auto;
+    width: 100vw;
+    box-sizing: border-box;
+    transition: 0.2s linear;
+  }
+  .header .active {
+    right: 0;
+  }
+  .header .menu a {
+    color: #4B3A72;
+    width: 100%;
+    height: 10vh;
+    border-bottom: 1px solid #4B3A72;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .header .menu a:first-child {
+    border-top: 1px solid #4B3A72;
+  }
+  .header .profile-link-text {
+    display: block;
+  }
+  .header .avatar {
+    display: none;
+  }
 }
 
 /*# sourceMappingURL=style.css.map */

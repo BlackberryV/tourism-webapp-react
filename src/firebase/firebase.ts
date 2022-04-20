@@ -16,10 +16,10 @@ import {
     doc,
     updateDoc,
     getDoc,
-    arrayUnion
+    arrayUnion,
 } from "firebase/firestore"
 import {getStorage, ref, uploadBytesResumable, getDownloadURL} from "firebase/storage";
-import {ICoordinates, ILocation, IUser, IRating, IComment} from "../types";
+import {ICoordinates, ILocation, IUser, IRating, IComment, IPropose} from "../types";
 import {Timestamp} from "firebase/firestore"
 
 const firebaseConfig = {
@@ -41,6 +41,7 @@ export const storage = getStorage(app);
 //DB functions
 const usersCollection = collection(db, 'users');
 const locationCollection = collection(db, 'locations');
+const proposesCollection = collection(db, 'proposes');
 
 export const addComment = async (postId: string, authorId: string, commentContent: string) => {
     const comment: IComment = {
@@ -64,6 +65,16 @@ export const uploadFile = async (file: File): Promise<string> => {
             reject
         )
     })
+}
+
+export const addPropose = async (userId: string, urls: string[], locationId: string) => {
+    const newPropose: IPropose = {
+        authorId: userId,
+        images: urls,
+        locationId: locationId,
+        date: serverTimestamp(),
+    }
+    await addDoc(proposesCollection, newPropose);
 }
 
 export const addLocation = async (name: string, description: string, urls: string[], coordinates: ICoordinates) => {
@@ -189,7 +200,6 @@ export const updatePostRating = async (post: ILocation, rating: IRating) => {
 
 export const changePostRating = async (post: ILocation, rating: IRating) => {
     const postRef = doc(db, "locations", post.id || "")
-
     let prevUserRating = post.rating.find(rate => rate.userId === rating.userId)?.value || 0
     let newRating = post.rating.filter(rate => rate.userId !== rating.userId).concat(rating)
     let newCachedValue = (post.cachedRating * post.rating.length - prevUserRating + rating.value) / post.rating.length
@@ -204,3 +214,42 @@ export const changePostRating = async (post: ILocation, rating: IRating) => {
         console.log((e as Error).message)
     }
 }
+
+export const addToFavorites = async (uid: string, location: ILocation) => {
+    const q = query(collection(db, "users"), where("uid", "==", uid));
+    const docs = await getDocs(q);
+    const userRef = doc(usersCollection, docs.docs[0].id);
+    try {
+        await updateDoc(userRef, {
+            selectedLocations: arrayUnion(location)
+        })
+    } catch (e) {
+        console.log((e as Error).message)
+    }
+}
+
+export const getFavorites = async (uid: string | undefined) => {
+    let favLocs: ILocation[] | undefined = [];
+    await getUserById(uid).then(r => favLocs = r?.selectedLocations)
+    return favLocs;
+}
+
+export const deleteFromFavorites = async (uid: string | undefined, location: ILocation) => {
+    let favoritesArr: ILocation[] = [];
+    await getFavorites(uid).then(r => favoritesArr = r);
+    let filteredArr: ILocation[] = favoritesArr.filter(item => item.id !== location.id);
+    const q = query(collection(db, "users"), where("uid", "==", uid));
+    const docs = await getDocs(q);
+    const userRef = doc(usersCollection, docs.docs[0].id);
+    try {
+        await updateDoc(userRef, {
+            selectedLocations:filteredArr
+        })
+    } catch (e) {
+        console.log((e as Error).message)
+    }
+}
+
+
+
+

@@ -28,10 +28,11 @@ export interface IComment {
     date: Timestamp,
 }
 
-export interface ISuggestion {
-    author: IUser,
-    image: File,
-    location: ILocation,
+export interface IPropose {
+    authorId: string,
+    images: string[],
+    locationId: string,
+    date: FieldValue,
 }
 
 export interface ICoordinates {
