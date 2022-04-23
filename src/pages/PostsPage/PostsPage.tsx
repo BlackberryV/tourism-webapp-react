@@ -29,8 +29,8 @@ const PostsPage: React.FC = () => {
         onSnapshot(postsQuery, (snapshot) => {
             let allPosts: ILocation[] = []
             snapshot.docs.forEach((doc) => {
-                let {name, coordinates, images, description, date, rating, cachedRating, comments} = doc.data()
-                allPosts.push({name, coordinates, images, description, date, rating, cachedRating, id: doc.id, comments})
+                let {name, coordinates, type, images, description, date, rating, cachedRating, comments} = doc.data()
+                allPosts.push({name, type, coordinates, images, description, date, rating, cachedRating, id: doc.id, comments})
             })
             setPosts(allPosts);
         })

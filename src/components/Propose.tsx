@@ -18,7 +18,7 @@ const Propose: FC<IProposeProps> = ({propose, filterProposes}) => {
     }
     const onDecline = () => {
         if (!propose.id) return
-        deletePropose(propose.id).then(() => console.log("declined"))
+        deletePropose(propose.id, propose.images).then(() => console.log("declined"))
         filterProposes(propose.id)
     }
     const handleProfileNavigate = (id:string) => {

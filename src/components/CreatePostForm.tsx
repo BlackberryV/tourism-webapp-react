@@ -5,11 +5,21 @@ import {addLocation, uploadFile} from "../firebase/firebase";
 import {FormikProps, useFormik} from "formik";
 import * as Yup from "yup"
 
+export enum TypesOfLocation {
+    Cafe,
+    Beach,
+    Park,
+    Hotel,
+    Museum,
+    Gallery,
+}
+
 interface CreatePostValues {
     name: string,
     description: string,
     coordinates: ICoordinates,
     urls: string[],
+    type: string,
 }
 
 const CreatePostForm: FC = () => {
@@ -24,14 +34,16 @@ const CreatePostForm: FC = () => {
             description: '',
             coordinates: coordinates,
             urls: [],
+            type: '',
         },
         validationSchema: Yup.object({
             name: Yup.string().required("Required"),
             description: Yup.string().required("Required"),
             urls: Yup.array().required().min(1, "You need to add at least one image"),
+            type: Yup.string().required("Required")
         }),
         onSubmit: (values, {resetForm}) => {
-            addLocation(values.name, values.description, values.urls, coordinates).then(() => console.log("post added"))
+            addLocation(values.name, values.description, values.urls, coordinates, values.type).then(() => console.log("post added"))
             resetForm();
         }
     })
@@ -89,6 +101,19 @@ const CreatePostForm: FC = () => {
                             {formik.touched.urls && formik.errors.urls ?
                                 <div className={"error-message"}>{formik.errors.urls}</div> : null}
                         </div>
+                        <select
+                            value={formik.values.type} onChange={formik.handleChange}
+                            id={"type"} name={"type"}>
+                            <option value={""}>Select type</option>
+                            {Object.keys(TypesOfLocation)
+                                .filter(e => typeof TypesOfLocation[e as any] === "string")
+                                .map(e =>
+                                    <option
+                                        key={e}
+                                        value={TypesOfLocation[e as any]}>
+                                        {TypesOfLocation[e as any]}</option>)}
+                        </select>
+                        {formik.errors.type && <div className="input-feedback">{formik.errors.type}</div>}
                     </div>
                 </div>
                 <div className="submit-container">

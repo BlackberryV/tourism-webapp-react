@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import {NavLink} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import Map from "../../components/Map";
 import CommentForm from "../../components/CommentForm";
 import {useParams} from "react-router-dom";
@@ -12,6 +12,7 @@ import AddProposesModal from "../../components/AddProposesModal";
 import {AuthContext} from "../../firebase/AuthContext";
 
 const PostDetailPage: React.FC = () => {
+    const navigation = useNavigate();
     const {id} = useParams();
     const [post, setPost] = useState<ILocation>()
     const [modalActive, setModalActive] = useState(false);
@@ -38,8 +39,10 @@ const PostDetailPage: React.FC = () => {
             if (!doc.exists()) {
                 return
             }
-            const {name, coordinates, images, description, date, rating, cachedRating, comments} = doc.data()
-            const loc = {name, coordinates, images, description, date, rating, cachedRating, id: doc.id, comments}
+            const {name, coordinates, images, description, date, rating, cachedRating, comments, type} = doc.data()
+            const loc = {
+                name, type, coordinates, images, description, date, rating, cachedRating, id: doc.id, comments
+            }
             setPost(loc)
         }
         getPost(id).then();
@@ -56,11 +59,10 @@ const PostDetailPage: React.FC = () => {
     if (!post) {
         return <></>
     }
-
     return (
         <div className='page-container'>
             <div className='back'>
-                <NavLink className='back-link' to='/'>
+                <div className='back-link' onClick={() => navigation(-1)}>
                     <svg className='arrow' xmlns="http://www.w3.org/2000/svg" width="20" height="15" viewBox="0 0 30 24"
                          fill="none">
                         <path
@@ -68,7 +70,7 @@ const PostDetailPage: React.FC = () => {
                             fill="black"/>
                     </svg>
                     Back
-                </NavLink>
+                </div>
             </div>
             <div className="content-container">
                 <div className="gray-container">
@@ -84,8 +86,8 @@ const PostDetailPage: React.FC = () => {
                                 </div>
                                 <div className="rating">Rating</div>
                             </div>
-                            <div className="text-description">{post.description}
-                            </div>
+                            <div className="text-description">{post.description}</div>
+                            <div>{post.type}</div>
                         </div>
                     </div>
                     {post.images.length > 1 ?

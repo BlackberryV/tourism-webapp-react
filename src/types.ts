@@ -20,6 +20,7 @@ export interface ILocation {
     comments: IComment[],
     rating: IRating[],
     cachedRating: number,
+    type: string
 }
 
 export interface IComment {

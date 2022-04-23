@@ -22,7 +22,13 @@ import {
     updateDoc,
     where,
 } from "firebase/firestore"
-import {getDownloadURL, getStorage, ref, uploadBytesResumable} from "firebase/storage";
+import {
+    getDownloadURL,
+    getStorage,
+    ref,
+    uploadBytesResumable,
+    deleteObject,
+} from "firebase/storage";
 import {IComment, ICoordinates, ILocation, IPropose, IRating, IUser} from "../types";
 
 const firebaseConfig = {
@@ -50,6 +56,11 @@ export const getProposes = async () => {
     return await getDocs(proposesCollection)
 }
 
+export const deleteFileFromStorage = async (url: string) => {
+    const fileRef = await ref(storage, url)
+    await deleteObject(fileRef)
+}
+
 export const addImageToLocation = async (locationId: string, imageUrls: string[], proposeId: string) => {
     const locationRef = doc(db, "locations", locationId)
     await updateDoc(locationRef, {images: arrayUnion(...imageUrls)}).then(() => console.log("Add image to location"))
@@ -57,9 +68,10 @@ export const addImageToLocation = async (locationId: string, imageUrls: string[]
     await deleteDoc(proposeRef).then(() => console.log("Delete propose"))
 }
 
-export const deletePropose = async (proposeId: string) => {
+export const deletePropose = async (proposeId: string, urls: string[]) => {
     const proposeRef = doc(db, "proposes", proposeId)
     await deleteDoc(proposeRef).then(() => console.log("Decline propose"))
+    urls.forEach(url => deleteFileFromStorage(url))
 }
 
 export const addComment = async (postId: string, authorId: string, commentContent: string) => {
@@ -96,8 +108,9 @@ export const addPropose = async (user: IUser, urls: string[], location: ILocatio
     await addDoc(proposesCollection, newPropose);
 }
 
-export const addLocation = async (name: string, description: string, urls: string[], coordinates: ICoordinates) => {
+export const addLocation = async (name: string, description: string, urls: string[], coordinates: ICoordinates, type: string) => {
     const newLocation: ILocation = {
+        type: type,
         name: name,
         images: urls,
         coordinates: coordinates,

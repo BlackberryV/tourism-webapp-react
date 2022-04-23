@@ -46,10 +46,9 @@ const AddProposesModal: FC<AddToFavoritesModalProps> = ({active, setActive, post
 
     const handleChangeFiles = async (files: FileList) => {
         await Promise.all(Array.from(files).map(uploadFile))
-            .then(urls => setUrls(urls))
-        console.log(`create urls ${urls}`)
-    }
+            .then(urls => setUrls(urls)).catch(err => console.log(err))
 
+    }
     return (
         <Modal active={active} setActive={setActive}>
             <form onSubmit={formik.handleSubmit}>

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react"
-import {NavLink, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {ILocation, IUser} from "../../types";
 import {getFavorites, getUserById} from "../../firebase/firebase";
 import FavoritesList from "../../components/FavoritesList";
@@ -19,10 +19,11 @@ const ProfilePage: React.FC = () => {
             })
         }
     }, [dbUser?.uid, profileId, favArr.length])
+    const navigation = useNavigate();
     return (
         <div className='page-container'>
             <div className='back'>
-                <NavLink className='back-link' to='/'>
+                <div className='back-link' onClick={()=> navigation(-1)}>
                     <svg className='arrow' xmlns="http://www.w3.org/2000/svg" width="20" height="15" viewBox="0 0 30 24"
                          fill="none">
                         <path
@@ -30,7 +31,7 @@ const ProfilePage: React.FC = () => {
                             fill="black"/>
                     </svg>
                     Back
-                </NavLink>
+                </div>
             </div>
             <div className="content-container">
                 <div className="gray-container">

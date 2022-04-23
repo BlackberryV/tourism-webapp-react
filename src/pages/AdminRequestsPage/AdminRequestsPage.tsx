@@ -38,15 +38,13 @@ const AdminRequestsPage: React.FC = () => {
                         id: location.id,
                         comments: location.comments,
                         description: location.description,
+                        type: location.type,
                     },
                 })
             })
             setProposes(result)
         })
     }, [])
-
-    console.log(proposes)
-
 
     return (
         <div className='page-container'>

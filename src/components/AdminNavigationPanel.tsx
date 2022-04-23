@@ -1,10 +1,11 @@
 import React from 'react';
-import {NavLink} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 
 const AdminNavigationPanel = () => {
+    const navigate = useNavigate();
     return (
         <div className='admin-panel'>
-            <NavLink className='back-link' to='/'>
+            <div className='back-link' onClick={()=> navigate(-1)}>
                 <svg className='arrow' xmlns="http://www.w3.org/2000/svg" width="20" height="15" viewBox="0 0 30 24"
                      fill="none">
                     <path
@@ -12,7 +13,7 @@ const AdminNavigationPanel = () => {
                         fill="black"/>
                 </svg>
                 Back
-            </NavLink>
+            </div>
                 <NavLink to='/createPost' className="admin-panel-item">Add location</NavLink>
                 <NavLink to='/requests' className="admin-panel-item">Suggestion</NavLink>
         </div>
