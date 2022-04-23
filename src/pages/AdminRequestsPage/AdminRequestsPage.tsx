@@ -17,7 +17,7 @@ const AdminRequestsPage: React.FC = () => {
             r.docs.map((propose) => {
                 const author = propose.data().author
                 const location = propose.data().location
-                 result.push({
+                result.push({
                     id: propose.id,
                     author: {
                         name: author.name,
@@ -51,13 +51,22 @@ const AdminRequestsPage: React.FC = () => {
     return (
         <div className='page-container'>
             <AdminNavigationPanel/>
-            <h1>Suggestions of the users</h1>
-            {proposes.length}
-            {proposes.map(propose => {
-                    return <Propose propose={propose} filterProposes={filterProposes}
-                                    key={propose.author.uid + propose.date}/>
-                }
-            )}
+            <div className="content-container">
+                <div className="gray-container propose-gray">
+                    <div className="white-container favorite-title">Suggestions of the users</div>
+                    {proposes.length === 0 ?
+                        <div className="white-container empty-list">Suggestion list is empty...</div>
+                        :
+                        <div className="white-container proposes-list">
+                            {proposes.map(propose => {
+                                    return <Propose propose={propose} filterProposes={filterProposes}
+                                                    key={propose.author.uid + propose.date}/>
+                                }
+                            )}
+                        </div>
+                    }
+                </div>
+            </div>
         </div>
     )
 }

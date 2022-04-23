@@ -8,7 +8,7 @@ interface ISliderProps {
 const Slider: FC<ISliderProps> = ({images}) => {
     return (
         <div>
-            <Carousel infiniteLoop={true}>
+            <Carousel className="slider" infiniteLoop={true}>
                 {images.map(img => (
                     <img className='slider-image' key={Date.now()} src={img} alt=''/>
                 ))
